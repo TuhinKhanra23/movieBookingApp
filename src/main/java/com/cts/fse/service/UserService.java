@@ -37,7 +37,7 @@ public class UserService implements IUserService {
                 user.setName(userInLedger.get().getName());
                 user.setContactNo(userInLedger.get().getContactNo());
 
-                user.setPassword(userInLedger.get().getPassword());
+//                user.setPassword(userInLedger.get().getPassword());
                 return new ResponseEntity<>(user, HttpStatus.OK);
             }
         }
