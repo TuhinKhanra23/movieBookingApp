@@ -1,5 +1,6 @@
 package com.cts.fse.service;
 
+
 import com.cts.fse.model.User;
 import com.cts.fse.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,17 +16,36 @@ public class UserService implements IUserService {
     @Autowired
     private UserRepo userRepo;
 
+//    @Autowired
+//    MongoConnectionConfig mongoConnectionConfig;
+
 
     @Override
     public ResponseEntity<String> saveUser(User user) {
-        if (userRepo.findById(user.getLoginId()).isPresent()) {
+        Optional<User> userInLedger = userRepo.findById(user.getLoginId());
+        List<User> userPresent = userRepo.findByEmail(user.getEmail());
+        if (userInLedger.isPresent()) {
             return new ResponseEntity<>("Login Id Already exits!", HttpStatus.CONFLICT);
+
+        } else if (!userPresent.isEmpty() && userPresent.get(0).getEmail().equals(user.getEmail())) {
+            return new ResponseEntity<>("Email Id Already exits!", HttpStatus.CONFLICT);
         } else {
+            user.setUserActive(true);
+            user.setRole("user");
             userRepo.save(user);
             return new ResponseEntity<>("Registration Successful", HttpStatus.OK);
         }
-
+//        else if(userInLedger.get().getEmail().equals(user.getEmail())) {
+//            return new ResponseEntity<>("Login Id Already exits!", HttpStatus.CONFLICT);
+//        MongoCollection<Document> userCollection=mongoConnectionConfig.getConnection("user");
+//        if(!Objects.requireNonNull(userCollection.find(new Document("_id", user.getLoginId())).first()).isEmpty()){
+//            return new ResponseEntity<>("Login Id Already exits!", HttpStatus.CONFLICT);
+//
+//        }
+//        userCollection.drop();
+//        return new ResponseEntity<>("Registration Successful", HttpStatus.OK);
     }
+
 
     @Override
     public ResponseEntity<User> userLogin(String loginId, String password) {

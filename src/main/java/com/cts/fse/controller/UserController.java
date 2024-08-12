@@ -5,7 +5,6 @@ import com.cts.fse.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 
 @RestController
@@ -15,17 +14,17 @@ public class UserController {
     private IUserService userService;
 
 
-    @PostMapping("/registerUser")
+    @PostMapping("/register")
     public ResponseEntity<String> addUser(@RequestBody User user) {
        return userService.saveUser(user);
     }
 
-    @GetMapping("/userLogin")
+    @GetMapping("/login")
     public ResponseEntity<User> userLogin(@RequestParam String loginId, String password){
         return userService.userLogin(loginId,password);
     }
 
-    @PostMapping("resetPassword")
+    @PostMapping("/forgot")
     public ResponseEntity<String> resetPassword(@RequestParam String loginId, String newPassword){
         return userService.resetPassword(loginId,newPassword);
     }

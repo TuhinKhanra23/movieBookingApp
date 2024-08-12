@@ -12,6 +12,9 @@ public class User{
     private String name;
     private String password;
     private String contactNo;
+    private boolean isUserActive;
+    private String role;
+    private Ticket bookedTicket;
 
     public String getEmail() {
         return email;
@@ -53,6 +56,30 @@ public class User{
         this.contactNo = contactNo;
     }
 
+    public boolean isUserActive() {
+        return isUserActive;
+    }
+
+    public void setUserActive(boolean userActive) {
+        isUserActive = userActive;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Ticket getBookedTicket() {
+        return bookedTicket;
+    }
+
+    public void setBookedTicket(Ticket bookedTicket) {
+        this.bookedTicket = bookedTicket;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -61,6 +88,9 @@ public class User{
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 ", contactNo='" + contactNo + '\'' +
+                ", isUserActive=" + isUserActive +
+                ", role='" + role + '\'' +
+                ", bookedTicket=" + bookedTicket +
                 '}';
     }
 }
