@@ -14,7 +14,7 @@ public class User{
     private String contactNo;
     private boolean isUserActive;
     private String role;
-    private Ticket bookedTicket;
+//    private Ticket bookedTicket;
 
     public String getEmail() {
         return email;
@@ -72,25 +72,25 @@ public class User{
         this.role = role;
     }
 
-    public Ticket getBookedTicket() {
-        return bookedTicket;
-    }
+//    public Ticket getBookedTicket() {
+//        return bookedTicket;
+//    }
+//
+//    public void setBookedTicket(Ticket bookedTicket) {
+//        this.bookedTicket = bookedTicket;
+//    }
 
-    public void setBookedTicket(Ticket bookedTicket) {
-        this.bookedTicket = bookedTicket;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "loginId='" + loginId + '\'' +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", contactNo='" + contactNo + '\'' +
-                ", isUserActive=" + isUserActive +
-                ", role='" + role + '\'' +
-                ", bookedTicket=" + bookedTicket +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "loginId='" + loginId + '\'' +
+//                ", email='" + email + '\'' +
+//                ", name='" + name + '\'' +
+//                ", password='" + password + '\'' +
+//                ", contactNo='" + contactNo + '\'' +
+//                ", isUserActive=" + isUserActive +
+//                ", role='" + role + '\'' +
+//                ", bookedTicket=" + bookedTicket +
+//                '}';
+//    }
 }

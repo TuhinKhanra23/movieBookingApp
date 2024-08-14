@@ -27,7 +27,10 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>17</java.version>
+
+        <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
+
+        <java.version>11</java.version>
 	</properties>
 	<dependencies>
 
@@ -54,16 +57,7 @@
 			<artifactId>springfox-swagger2</artifactId>
 			<version>2.9.2</version>
 		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.9.2</version>
 
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -76,9 +70,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>22</source>
-					<target>22</target>
-					<compilerArgs>--enable-preview</compilerArgs>
+                    <skip>true</skip>
 				</configuration>
 			</plugin>
 		</plugins>

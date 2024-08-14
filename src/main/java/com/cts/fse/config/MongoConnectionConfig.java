@@ -2,25 +2,23 @@ package com.cts.fse.config;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
-
-@Service
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Configuration
 public class MongoConnectionConfig {
     @Value("${spring.data.mongodb.uri}")
     private String connectionString;
 
-    public MongoCollection<Document> getConnection(String collectionName) {
+    public MongoDatabase establishConnection() {
         System.out.println(connectionString);
 //        String uri = System.getProperty(connectionString);
-        try (MongoClient mongoClient = MongoClients.create(connectionString)) {
+        MongoClient mongoClient = MongoClients.create(connectionString);
+        return mongoClient.getDatabase("MovieBookingApp");
 
-            MongoDatabase database = mongoClient.getDatabase("MovieBookingApp");
-            return database.getCollection(collectionName);
-        }
     }
 }

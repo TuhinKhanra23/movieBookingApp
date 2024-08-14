@@ -1,6 +1,7 @@
 package com.cts.fse.service;
 
 
+import com.cts.fse.config.MongoConnectionConfig;
 import com.cts.fse.model.User;
 import com.cts.fse.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,34 +16,29 @@ public class UserService implements IUserService {
     @Autowired
     private UserRepo userRepo;
 
-//    @Autowired
-//    MongoConnectionConfig mongoConnectionConfig;
+    @Autowired
+    MongoConnectionConfig mongoConnectionConfig;
 
 
     @Override
     public ResponseEntity<String> saveUser(User user) {
-        Optional<User> userInLedger = userRepo.findById(user.getLoginId());
-        List<User> userPresent = userRepo.findByEmail(user.getEmail());
+//       MongoDatabase database= mongoConnectionConfig.establishConnection();
+//        MongoCollection<User> userCollection=database.getCollection("user",User.class);
+        Optional<?> userInLedger = userRepo.findById(user.getLoginId());
         if (userInLedger.isPresent()) {
             return new ResponseEntity<>("Login Id Already exits!", HttpStatus.CONFLICT);
 
-        } else if (!userPresent.isEmpty() && userPresent.get(0).getEmail().equals(user.getEmail())) {
+        } else if (!userRepo.findByEmail(user.getEmail()).isEmpty()) {
             return new ResponseEntity<>("Email Id Already exits!", HttpStatus.CONFLICT);
+
         } else {
             user.setUserActive(true);
             user.setRole("user");
             userRepo.save(user);
+//            userCollection.drop();
             return new ResponseEntity<>("Registration Successful", HttpStatus.OK);
         }
-//        else if(userInLedger.get().getEmail().equals(user.getEmail())) {
-//            return new ResponseEntity<>("Login Id Already exits!", HttpStatus.CONFLICT);
-//        MongoCollection<Document> userCollection=mongoConnectionConfig.getConnection("user");
-//        if(!Objects.requireNonNull(userCollection.find(new Document("_id", user.getLoginId())).first()).isEmpty()){
-//            return new ResponseEntity<>("Login Id Already exits!", HttpStatus.CONFLICT);
-//
-//        }
-//        userCollection.drop();
-//        return new ResponseEntity<>("Registration Successful", HttpStatus.OK);
+
     }
 
 
@@ -58,7 +53,6 @@ public class UserService implements IUserService {
                 user.setName(userInLedger.get().getName());
                 user.setContactNo(userInLedger.get().getContactNo());
 
-//                user.setPassword(userInLedger.get().getPassword());
                 return new ResponseEntity<>(user, HttpStatus.OK);
             }
         }
