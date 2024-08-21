@@ -1,10 +1,9 @@
 package com.cts.fse.model;
 
-import io.swagger.models.auth.In;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import java.util.Set;
 
 @Document("theater")
 public class Theater {
@@ -16,7 +15,8 @@ public class Theater {
     private String theaterLoc;
 
     private Integer theaterCapacity;
-    private List<String> bookedTickets;
+    private Set<Integer> bookedTickets;
+    private Integer availableSeats;
 
     public Integer getTheaterId() {
         return theaterId;
@@ -50,12 +50,20 @@ public class Theater {
         this.theaterCapacity = theaterCapacity;
     }
 
-    public List<String> getBookedTickets() {
+    public Set<Integer> getBookedTickets() {
         return bookedTickets;
     }
 
-    public void setBookedTickets(List<String> bookedTickets) {
+    public void setBookedTickets(Set<Integer> bookedTickets) {
         this.bookedTickets = bookedTickets;
+    }
+
+    public Integer getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public void setAvailableSeats(Integer availableSeats) {
+        this.availableSeats = availableSeats;
     }
 
     @Override
@@ -66,6 +74,7 @@ public class Theater {
                 ", theaterLoc='" + theaterLoc + '\'' +
                 ", theaterCapacity=" + theaterCapacity +
                 ", bookedTickets=" + bookedTickets +
+                ", availableSeats=" + availableSeats +
                 '}';
     }
 }

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TheaterRepo extends MongoRepository<Theater, String> {
+public interface TheaterRepo extends MongoRepository<Theater, Integer> {
     List<Theater> findByTheaterNameAndTheaterLoc(String theaterName, String theaterLoc);
 }

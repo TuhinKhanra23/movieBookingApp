@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
 @Document("movie")
 public class Movie {
@@ -13,8 +13,8 @@ public class Movie {
     private String movieId;
     private String movieName;
     private Date releaseDate;
-    private Map<String, Integer> theaterMap;
-    private boolean movieAvailableForBooking;
+    private List<Integer> theaterIdList;
+
 
     public String getMovieId() {
         return movieId;
@@ -40,30 +40,19 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
-    public Map<String, Integer> getTheaterMap() {
-        return theaterMap;
+    public List<Integer> getTheaterIdList() {
+        return theaterIdList;
     }
 
-    public void setTheaterMap(Map<String, Integer> theaterMap) {
-        this.theaterMap = theaterMap;
+    public void setTheaterIdList(List<Integer> theaterIdList) {
+        this.theaterIdList = theaterIdList;
     }
 
-    public boolean isMovieAvailableForBooking() {
-        return movieAvailableForBooking;
-    }
-
-    public void setMovieAvailableForBooking(boolean movieAvailableForBooking) {
-        this.movieAvailableForBooking = movieAvailableForBooking;
-    }
 
     @Override
     public String toString() {
-        return "Movie{" +
-                "movieId='" + movieId + '\'' +
-                ", movieName='" + movieName + '\'' +
-                ", releaseDate=" + releaseDate +
-                ", theaterMap=" + theaterMap +
-                ", movieAvailableForBooking=" + movieAvailableForBooking +
+        return "Movie{" + "movieId='" + movieId + '\'' + ", movieName='" + movieName + '\'' + ", releaseDate=" + releaseDate + ", theaterIdList=" + theaterIdList +
+
                 '}';
     }
 }

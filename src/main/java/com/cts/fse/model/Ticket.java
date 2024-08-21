@@ -13,9 +13,9 @@ public class Ticket {
     private String ticketId;
     private String userId;
     private String movieId;
-    private String theaterId;
+    private Integer theaterId;
     private Date bookingDate;
-    private List<String> seatNumber;
+    private List<Integer> seatNumber;
 
     public String getTicketId() {
         return ticketId;
@@ -41,11 +41,11 @@ public class Ticket {
         this.movieId = movieId;
     }
 
-    public String getTheaterId() {
+    public Integer getTheaterId() {
         return theaterId;
     }
 
-    public void setTheaterId(String theaterId) {
+    public void setTheaterId(Integer theaterId) {
         this.theaterId = theaterId;
     }
 
@@ -57,11 +57,11 @@ public class Ticket {
         this.bookingDate = bookingDate;
     }
 
-    public List<String> getSeatNumber() {
+    public List<Integer> getSeatNumber() {
         return seatNumber;
     }
 
-    public void setSeatNumber(List<String> seatNumber) {
+    public void setSeatNumber(List<Integer> seatNumber) {
         this.seatNumber = seatNumber;
     }
 

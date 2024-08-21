@@ -2,28 +2,41 @@ package com.cts.fse.service;
 
 
 import com.cts.fse.config.MongoConnectionConfig;
+import com.cts.fse.dto.ShowTicketResDto;
+import com.cts.fse.dto.UserRegisterDTO;
+import com.cts.fse.model.Movie;
+import com.cts.fse.model.Theater;
+import com.cts.fse.model.Ticket;
 import com.cts.fse.model.User;
+import com.cts.fse.repository.MovieRepo;
+import com.cts.fse.repository.TheaterRepo;
+import com.cts.fse.repository.TicketRepo;
 import com.cts.fse.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
     @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
     MongoConnectionConfig mongoConnectionConfig;
-
+    @Autowired
+    TicketRepo ticketRepo;
+    @Autowired
+    private UserRepo userRepo;
+    @Autowired
+    private MovieRepo movieRepo;
+    @Autowired
+    private TheaterRepo theaterRepo;
 
     @Override
-    public ResponseEntity<String> saveUser(User user) {
-//       MongoDatabase database= mongoConnectionConfig.establishConnection();
-//        MongoCollection<User> userCollection=database.getCollection("user",User.class);
+    public ResponseEntity<String> saveUser(UserRegisterDTO user) {
+
         Optional<?> userInLedger = userRepo.findById(user.getLoginId());
         if (userInLedger.isPresent()) {
             return new ResponseEntity<>("Login Id Already exits!", HttpStatus.CONFLICT);
@@ -32,10 +45,15 @@ public class UserService implements IUserService {
             return new ResponseEntity<>("Email Id Already exits!", HttpStatus.CONFLICT);
 
         } else {
-            user.setUserActive(true);
-            user.setRole("user");
-            userRepo.save(user);
-//            userCollection.drop();
+            User userDetails = new User();
+            userDetails.setUserActive(true);
+            userDetails.setRole("user");
+            userDetails.setName(user.getName());
+            userDetails.setPassword(user.getPassword());
+            userDetails.setEmail(user.getEmail());
+            userDetails.setLoginId(user.getLoginId());
+            userDetails.setContactNo(user.getContactNo());
+            userRepo.save(userDetails);
             return new ResponseEntity<>("Registration Successful", HttpStatus.OK);
         }
 
@@ -71,10 +89,45 @@ public class UserService implements IUserService {
             System.out.println(newPassword);
             user.setPassword(newPassword);
             System.out.println(user);
+            user.setUserActive(true);
+            user.setRole("user");
+            if (null != userInLedger.get().getBookedTicket()) {
+                user.setBookedTicket(userInLedger.get().getBookedTicket());
+            }
             userRepo.save(user);
+
             return new ResponseEntity<>("Password Changed", HttpStatus.OK);
         }
-        return new ResponseEntity<>("UserID not found",HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("UserID not found", HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public List<ShowTicketResDto> showBookedTickets(String userId) {
+        List<Ticket> ticketList = ticketRepo.findByUserId(userId);
+        List<ShowTicketResDto> showTicketResDtoList = new ArrayList<>();
+        for (Ticket ticket : ticketList) {
+            if (!ticketList.isEmpty()) {
+
+                ShowTicketResDto showTicketResDto = new ShowTicketResDto();
+
+                Optional<User> user = userRepo.findById(userId);
+                user.ifPresent(value -> showTicketResDto.setName(value.getName()));
+                Optional<Movie> movie = movieRepo.findById(ticket.getMovieId());
+                movie.ifPresent(value -> showTicketResDto.setMovieName(value.getMovieName()));
+
+                Optional<Theater> theater = theaterRepo.findById(ticket.getTheaterId());
+                if (theater.isPresent()) {
+                    showTicketResDto.setTheaterName(theater.get().getTheaterName());
+                    showTicketResDto.setTheaterLoc(theater.get().getTheaterLoc());
+                }
+                showTicketResDto.setBookingDate(ticket.getBookingDate());
+                showTicketResDto.setSeatNumber(ticket.getSeatNumber());
+
+                showTicketResDtoList.add(showTicketResDto);
+            }
+        }
+
+        return showTicketResDtoList;
     }
 
 
