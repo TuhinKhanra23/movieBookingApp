@@ -41,11 +41,39 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+            <version>2.5.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
 		</dependency>
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+        <!--		<dependency>-->
+        <!--			<groupId>org.junit.jupiter</groupId>-->
+        <!--			<artifactId>junit-jupiter-api</artifactId>-->
+        <!--			<version>5.12.0</version>-->
+        <!--			<scope>test</scope>-->
+        <!--		</dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
+        <!--		<dependency>-->
+        <!--			<groupId>org.mockito</groupId>-->
+        <!--			<artifactId>mockito-junit-jupiter</artifactId>-->
+        <!--			<version>4.11.0</version>-->
+        <!--			<scope>test</scope>-->
+        <!--		</dependency>-->
 
 
+        <!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter &ndash;&gt;-->
+        <!--		<dependency>-->
+        <!--			<groupId>org.mockito</groupId>-->
+        <!--			<artifactId>mockito-core</artifactId>-->
+        <!--			<version>4.11.0</version>-->
+        <!--			<scope>test</scope>-->
+        <!--		</dependency>-->
 
-		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+
+        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
@@ -57,8 +85,49 @@
 			<artifactId>springfox-swagger2</artifactId>
 			<version>2.9.2</version>
 		</dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
 
-	</dependencies>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
+        <!--		<dependency>-->
+        <!--			<groupId>io.jsonwebtoken</groupId>-->
+        <!--			<artifactId>jjwt-api</artifactId>-->
+        <!--			<version>0.12.5</version>-->
+        <!--		</dependency>-->
+        <!--		&lt;!&ndash; https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl &ndash;&gt;-->
+        <!--		<dependency>-->
+        <!--			<groupId>io.jsonwebtoken</groupId>-->
+        <!--			<artifactId>jjwt-impl</artifactId>-->
+        <!--			<version>0.12.5</version>-->
+        <!--			<scope>runtime</scope>-->
+        <!--		</dependency>-->
+        <!--		&lt;!&ndash; https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson &ndash;&gt;-->
+        <!--		<dependency>-->
+        <!--			<groupId>io.jsonwebtoken</groupId>-->
+        <!--			<artifactId>jjwt-jackson</artifactId>-->
+        <!--			<version>0.12.5</version>-->
+
+        <!--		</dependency>-->
+        <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.12.6</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+    </dependencies>
 
 	<build>
 		<plugins>
