@@ -1,0 +1,284 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.cts.fse.service</a>
+</div>
+
+<h1>Coverage Summary for Class: UserService (com.cts.fse.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (3/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    11.1%
+  </span>
+  <span class="absValue">
+    (2/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15%
+  </span>
+  <span class="absValue">
+    (12/80)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.cts.fse.service;
+&nbsp;
+&nbsp;
+&nbsp;import com.cts.fse.config.MongoConnectionConfig;
+&nbsp;import com.cts.fse.dto.ShowTicketResDto;
+&nbsp;import com.cts.fse.dto.UserRegisterDTO;
+&nbsp;import com.cts.fse.model.Movie;
+&nbsp;import com.cts.fse.model.Theater;
+&nbsp;import com.cts.fse.model.Ticket;
+&nbsp;import com.cts.fse.model.User;
+&nbsp;import com.cts.fse.repository.MovieRepo;
+&nbsp;import com.cts.fse.repository.TheaterRepo;
+&nbsp;import com.cts.fse.repository.TicketRepo;
+&nbsp;import com.cts.fse.repository.UserRepo;
+&nbsp;import com.cts.fse.utils.JwtUtil;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.core.userdetails.UserDetails;
+&nbsp;import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+<b class="fc">&nbsp;@Slf4j</b>
+&nbsp;@Service
+<b class="fc">&nbsp;public class UserService implements IUserService {</b>
+&nbsp;
+<b class="fc">&nbsp;    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    MongoConnectionConfig mongoConnectionConfig;
+&nbsp;    @Autowired
+&nbsp;    TicketRepo ticketRepo;
+&nbsp;    @Autowired
+&nbsp;    UserDetailsServiceImpl userDetailsService;
+&nbsp;    @Autowired
+&nbsp;    private JwtUtil jwtutil;
+&nbsp;    @Autowired
+&nbsp;    private UserRepo userRepo;
+&nbsp;    @Autowired
+&nbsp;    private MovieRepo movieRepo;
+&nbsp;    @Autowired
+&nbsp;    private TheaterRepo theaterRepo;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public ResponseEntity&lt;String&gt; saveUser(UserRegisterDTO user) {
+<b class="nc">&nbsp;        log.info(&quot;Inside SaveUser Service Method :&quot;);</b>
+<b class="nc">&nbsp;        BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();</b>
+<b class="nc">&nbsp;        Optional&lt;?&gt; userInLedger = userRepo.findById(user.getLoginId());</b>
+<b class="nc">&nbsp;        if (userInLedger.isPresent()) {</b>
+<b class="nc">&nbsp;            log.info(&quot;Login Id Already exits! {}&quot;, user.getLoginId());</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;Login Id Already exits!&quot;, HttpStatus.CONFLICT);</b>
+&nbsp;
+<b class="nc">&nbsp;        } else if (!userRepo.findByEmail(user.getEmail()).isEmpty()) {</b>
+<b class="nc">&nbsp;            log.info(&quot;Email Id Already exits! {}&quot;, user.getEmail());</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;Email Id Already exits!&quot;, HttpStatus.CONFLICT);</b>
+&nbsp;
+&nbsp;        } else {
+<b class="nc">&nbsp;            User userDetails = new User();</b>
+<b class="nc">&nbsp;            userDetails.setUserActive(true);</b>
+<b class="nc">&nbsp;            userDetails.setRole(&quot;user&quot;);</b>
+<b class="nc">&nbsp;            userDetails.setName(user.getName());</b>
+<b class="nc">&nbsp;            userDetails.setPassword(encoder.encode(user.getPassword()));</b>
+&nbsp;
+<b class="nc">&nbsp;            userDetails.setEmail(user.getEmail());</b>
+<b class="nc">&nbsp;            userDetails.setLoginId(user.getLoginId());</b>
+<b class="nc">&nbsp;            userDetails.setContactNo(user.getContactNo());</b>
+<b class="nc">&nbsp;            userRepo.save(userDetails);</b>
+<b class="nc">&nbsp;            log.info(&quot;Registration Successful!.. User Added to Database with Id {}&quot;, user.getLoginId());</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;Registration Successful&quot;, HttpStatus.OK);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public ResponseEntity&lt;User&gt; userLogin(String loginId, String password) {
+&nbsp;//       Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+&nbsp;//       String userName=authentication.getName();
+<b class="fc">&nbsp;        log.info(&quot;Inside userLogin Service Method!&quot;);</b>
+<b class="fc">&nbsp;        UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);</b>
+&nbsp;
+<b class="fc">&nbsp;        Optional&lt;User&gt; userInLedger = userRepo.findById(loginId);</b>
+<b class="fc">&nbsp;        User user = new User();</b>
+<b class="fc">&nbsp;        String generateToken = &quot;&quot;;</b>
+&nbsp;
+<b class="pc">&nbsp;        if (userInLedger.isPresent()) {</b>
+&nbsp;
+<b class="pc">&nbsp;            if (passwordEncoder.matches(password,userInLedger.get().getPassword())) {</b>
+<b class="nc">&nbsp;                log.info(&quot;Password Matched for user{}&quot;,loginId);</b>
+<b class="nc">&nbsp;                generateToken = jwtutil.generateToken(userDetails);</b>
+<b class="nc">&nbsp;                log.info(&quot;JWT Token is: {}&quot;, generateToken);</b>
+<b class="nc">&nbsp;                user.setLoginId(userInLedger.get().getLoginId());</b>
+<b class="nc">&nbsp;                user.setEmail(userInLedger.get().getEmail());</b>
+<b class="nc">&nbsp;                user.setName(userInLedger.get().getName());</b>
+<b class="nc">&nbsp;                user.setContactNo(userInLedger.get().getContactNo());</b>
+<b class="nc">&nbsp;                user.setToken(generateToken);</b>
+<b class="nc">&nbsp;                log.info(&quot;Login Successful!.. for userId {}&quot;, loginId);</b>
+<b class="nc">&nbsp;                return new ResponseEntity&lt;&gt;(user, HttpStatus.OK);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        log.info(&quot;Login Failed!.. for userId {}&quot;, loginId);</b>
+<b class="fc">&nbsp;        return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public ResponseEntity&lt;String&gt; resetPassword(String loginId, String newPassword) {
+<b class="nc">&nbsp;        log.info(&quot;Inside resetPassword Service&quot;);</b>
+<b class="nc">&nbsp;        Optional&lt;User&gt; userInLedger = userRepo.findById(loginId);</b>
+<b class="nc">&nbsp;        User user = new User();</b>
+<b class="nc">&nbsp;        if (userInLedger.isPresent()) {</b>
+<b class="nc">&nbsp;            user.setLoginId(userInLedger.get().getLoginId());</b>
+<b class="nc">&nbsp;            user.setEmail(userInLedger.get().getEmail());</b>
+<b class="nc">&nbsp;            user.setName(userInLedger.get().getName());</b>
+<b class="nc">&nbsp;            user.setContactNo(userInLedger.get().getContactNo());</b>
+&nbsp;
+<b class="nc">&nbsp;            user.setPassword(passwordEncoder.encode(newPassword));</b>
+&nbsp;
+<b class="nc">&nbsp;            user.setUserActive(true);</b>
+<b class="nc">&nbsp;            user.setRole(&quot;user&quot;);</b>
+<b class="nc">&nbsp;            if (null != userInLedger.get().getBookedTicket()) {</b>
+<b class="nc">&nbsp;                user.setBookedTicket(userInLedger.get().getBookedTicket());</b>
+&nbsp;            }
+<b class="nc">&nbsp;            userRepo.save(user);</b>
+<b class="nc">&nbsp;            log.info(&quot;Password Change Successful ..for userId{}&quot;, loginId);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;Password Changed&quot;, HttpStatus.OK);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        log.info(&quot;UserID not found{}&quot;, loginId);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(&quot;UserID not found&quot;, HttpStatus.NOT_FOUND);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;ShowTicketResDto&gt; showBookedTickets(String userId) {
+<b class="nc">&nbsp;        log.info(&quot;Inside showBookedTickets Service&quot;);</b>
+<b class="nc">&nbsp;        List&lt;Ticket&gt; ticketList = ticketRepo.findByUserId(userId);</b>
+<b class="nc">&nbsp;        List&lt;ShowTicketResDto&gt; showTicketResDtoList = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        for (Ticket ticket : ticketList) {</b>
+<b class="nc">&nbsp;            if (!ticketList.isEmpty()) {</b>
+&nbsp;
+<b class="nc">&nbsp;                ShowTicketResDto showTicketResDto = new ShowTicketResDto();</b>
+&nbsp;
+<b class="nc">&nbsp;                Optional&lt;User&gt; user = userRepo.findById(userId);</b>
+<b class="nc">&nbsp;                user.ifPresent(value -&gt; showTicketResDto.setName(value.getName()));</b>
+<b class="nc">&nbsp;                Optional&lt;Movie&gt; movie = movieRepo.findById(ticket.getMovieId());</b>
+<b class="nc">&nbsp;                movie.ifPresent(value -&gt; showTicketResDto.setMovieName(value.getMovieName()));</b>
+&nbsp;
+<b class="nc">&nbsp;                Optional&lt;Theater&gt; theater = theaterRepo.findById(ticket.getTheaterId());</b>
+<b class="nc">&nbsp;                if (theater.isPresent()) {</b>
+<b class="nc">&nbsp;                    showTicketResDto.setTheaterName(theater.get().getTheaterName());</b>
+<b class="nc">&nbsp;                    showTicketResDto.setTheaterLoc(theater.get().getTheaterLoc());</b>
+&nbsp;                }
+<b class="nc">&nbsp;                showTicketResDto.setBookingDate(ticket.getBookingDate());</b>
+<b class="nc">&nbsp;                showTicketResDto.setSeatNumber(ticket.getSeatNumber());</b>
+<b class="nc">&nbsp;                log.info(&quot;Ticket Added to response with ticketId{}&quot;, ticket.getTicketId());</b>
+<b class="nc">&nbsp;                showTicketResDtoList.add(showTicketResDto);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        log.info(&quot;Returning Tickets List for no of Records:{}&quot;, showTicketResDtoList.size());</b>
+<b class="nc">&nbsp;        return showTicketResDtoList;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-08-23 02:58</div>
+</div>
+</body>
+</html>

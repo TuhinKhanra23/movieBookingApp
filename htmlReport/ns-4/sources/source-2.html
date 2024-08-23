@@ -1,0 +1,350 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MovieService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.cts.fse.service</a>
+</div>
+
+<h1>Coverage Summary for Class: MovieService (com.cts.fse.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MovieService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    63.8%
+  </span>
+  <span class="absValue">
+    (37/58)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.2%
+  </span>
+  <span class="absValue">
+    (114/125)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.cts.fse.service;
+&nbsp;
+&nbsp;import com.cts.fse.config.MongoConnectionConfig;
+&nbsp;import com.cts.fse.dto.BookTicketReqDTO;
+&nbsp;import com.cts.fse.dto.MovieSearchResDTO;
+&nbsp;import com.cts.fse.model.Movie;
+&nbsp;import com.cts.fse.model.Theater;
+&nbsp;import com.cts.fse.model.Ticket;
+&nbsp;import com.cts.fse.repository.MovieRepo;
+&nbsp;import com.cts.fse.repository.TheaterRepo;
+&nbsp;import com.cts.fse.repository.TicketRepo;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.data.mongodb.core.MongoOperations;
+&nbsp;import org.springframework.data.mongodb.core.query.Criteria;
+&nbsp;import org.springframework.data.mongodb.core.query.Query;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.*;
+&nbsp;
+<b class="fc">&nbsp;@Slf4j</b>
+&nbsp;@Service
+<b class="fc">&nbsp;public class MovieService implements IMovieService {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    MongoConnectionConfig mongoConnectionConfig;
+&nbsp;    @Autowired
+&nbsp;    MongoOperations mongoOperations;
+&nbsp;    @Autowired
+&nbsp;    TicketRepo ticketRepo;
+&nbsp;    @Autowired
+&nbsp;    private TheaterRepo theaterRepo;
+&nbsp;    @Autowired
+&nbsp;    private MovieRepo movieRepo;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public ResponseEntity&lt;String&gt; addTheater(Theater theater) {
+<b class="fc">&nbsp;        log.info(&quot;Inside addTheater Service Method :&quot;);</b>
+<b class="fc">&nbsp;        long totalTheater = theaterRepo.count();</b>
+&nbsp;
+<b class="fc">&nbsp;        if (!theaterRepo.findByTheaterNameAndTheaterLoc(theater.getTheaterName(), theater.getTheaterLoc()).isEmpty()) {</b>
+<b class="fc">&nbsp;            log.info(&quot;Theater already present with this name and location!&quot;);</b>
+<b class="fc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;Theater already present with this name and location!&quot;, HttpStatus.CONFLICT);</b>
+&nbsp;        } else {
+&nbsp;
+<b class="fc">&nbsp;            if (totalTheater == 0) {</b>
+<b class="fc">&nbsp;                theater.setTheaterId(1);</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                theater.setTheaterId((int) totalTheater + 1);</b>
+&nbsp;            }
+<b class="fc">&nbsp;            theaterRepo.save(theater);</b>
+<b class="fc">&nbsp;            log.info(&quot;Theater added Successfully!&quot;);</b>
+<b class="fc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;Theater added Successfully!&quot;, HttpStatus.OK);</b>
+&nbsp;
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public ResponseEntity&lt;String&gt; addMovie(Movie movie) {
+<b class="fc">&nbsp;        log.info(&quot;Inside addMovie Service Method :&quot;);</b>
+<b class="fc">&nbsp;        long totalMovie = movieRepo.count();</b>
+<b class="fc">&nbsp;        if (totalMovie == 0) {</b>
+<b class="fc">&nbsp;            movie.setMovieId(&quot;1&quot;);</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            movie.setMovieId(String.valueOf((int) totalMovie + 1));</b>
+&nbsp;        }
+<b class="fc">&nbsp;        movieRepo.save(movie);</b>
+<b class="fc">&nbsp;        log.info(&quot;Movie added Successfully!&quot;);</b>
+<b class="fc">&nbsp;        return new ResponseEntity&lt;&gt;(&quot;Movie added Successfully!&quot;, HttpStatus.OK);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;MovieSearchResDTO&gt; searchAllMovies() {
+<b class="fc">&nbsp;        log.info(&quot;Inside searchAllMovies Service Method :&quot;);</b>
+<b class="fc">&nbsp;        List&lt;MovieSearchResDTO&gt; movieSearchResDTOList = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        List&lt;Movie&gt; movieList = movieRepo.findAll();</b>
+<b class="fc">&nbsp;        log.info(&quot;total movie in repo :{}&quot;,movieList.size());</b>
+&nbsp;
+<b class="fc">&nbsp;        for (Movie movie : movieList) {</b>
+&nbsp;
+<b class="fc">&nbsp;            log.info(&quot;inside movie id :{}&quot;,movie.getMovieId());</b>
+&nbsp;
+<b class="fc">&nbsp;            log.info(&quot;total theater number for this movie is :{}&quot;,movie.getTheaterIdList().size());</b>
+<b class="fc">&nbsp;            for (Integer tid : movie.getTheaterIdList()) {</b>
+<b class="fc">&nbsp;                log.info(&quot;inside theater id :{}&quot;,tid);</b>
+&nbsp;
+<b class="fc">&nbsp;                Optional&lt;Theater&gt; theater = theaterRepo.findById(tid);</b>
+<b class="pc">&nbsp;                if (theater.isPresent()) {</b>
+<b class="fc">&nbsp;                    MovieSearchResDTO movieSearchResDTO = new MovieSearchResDTO();</b>
+<b class="fc">&nbsp;                    movieSearchResDTO.setMovieId(movie.getMovieId());</b>
+<b class="fc">&nbsp;                    movieSearchResDTO.setMovieName(movie.getMovieName());</b>
+<b class="fc">&nbsp;                    movieSearchResDTO.setReleaseDate(movie.getReleaseDate());</b>
+<b class="fc">&nbsp;                    movieSearchResDTO.setTheaterName(theater.get().getTheaterName());</b>
+<b class="fc">&nbsp;                    movieSearchResDTO.setTheaterLoc(theater.get().getTheaterLoc());</b>
+<b class="fc">&nbsp;                    movieSearchResDTO.setTheaterCapacity(theater.get().getTheaterCapacity());</b>
+&nbsp;
+<b class="pc">&nbsp;                    if (null != theater.get().getBookedTickets() &amp;&amp; !theater.get().getBookedTickets().isEmpty()) {</b>
+<b class="fc">&nbsp;                        movieSearchResDTO.setBookedTickets(theater.get().getBookedTickets());</b>
+&nbsp;                    }
+<b class="fc">&nbsp;                    log.info(&quot;theater added to response list with id :{}&quot;,tid);</b>
+<b class="fc">&nbsp;                    movieSearchResDTOList.add(movieSearchResDTO);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        log.info(&quot;final response list size :{}&quot;,movieSearchResDTOList.size());</b>
+<b class="fc">&nbsp;        return movieSearchResDTOList;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;MovieSearchResDTO&gt; searchMovie(String movieName) {
+<b class="fc">&nbsp;        log.info(&quot;Inside searchMovie Service Method :&quot;);</b>
+<b class="fc">&nbsp;        List&lt;MovieSearchResDTO&gt; movieSearchResDTOList = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;        Query query = new Query();</b>
+<b class="fc">&nbsp;        List&lt;Criteria&gt; criteria = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;
+<b class="pc">&nbsp;        if (null != movieName &amp;&amp; !movieName.isEmpty()) {</b>
+<b class="fc">&nbsp;            criteria.add(Criteria.where(&quot;movieName&quot;).regex(movieName, &quot;i&quot;));</b>
+&nbsp;        }
+<b class="pc">&nbsp;        if (!criteria.isEmpty()) {</b>
+<b class="fc">&nbsp;            query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[0])));</b>
+&nbsp;        }
+<b class="fc">&nbsp;        List&lt;Movie&gt; movieList = mongoOperations.find(query, Movie.class);</b>
+<b class="fc">&nbsp;        log.info(&quot;total  movie returned :{}&quot;,movieList.size());</b>
+&nbsp;
+<b class="fc">&nbsp;        for (Movie movie : movieList) {</b>
+<b class="fc">&nbsp;            log.info(&quot;inside movie id:{}&quot;,movie.getMovieId());</b>
+<b class="fc">&nbsp;            log.info(&quot;total theater number for this movie is:{}&quot;, movie.getTheaterIdList().size());</b>
+<b class="fc">&nbsp;            for (Integer tid : movie.getTheaterIdList()) {</b>
+&nbsp;
+<b class="fc">&nbsp;                log.info(&quot;inside theater loop for theater id:{}&quot;,tid);</b>
+<b class="fc">&nbsp;                Optional&lt;Theater&gt; theater = theaterRepo.findById(tid);</b>
+<b class="pc">&nbsp;                if (theater.isPresent()) {</b>
+<b class="fc">&nbsp;                    MovieSearchResDTO movieSearchResDTO = new MovieSearchResDTO();</b>
+<b class="fc">&nbsp;                    movieSearchResDTO.setMovieId(movie.getMovieId());</b>
+<b class="fc">&nbsp;                    movieSearchResDTO.setMovieName(movie.getMovieName());</b>
+<b class="fc">&nbsp;                    movieSearchResDTO.setReleaseDate(movie.getReleaseDate());</b>
+<b class="fc">&nbsp;                    movieSearchResDTO.setTheaterName(theater.get().getTheaterName());</b>
+<b class="fc">&nbsp;                    movieSearchResDTO.setTheaterLoc(theater.get().getTheaterLoc());</b>
+<b class="fc">&nbsp;                    movieSearchResDTO.setTheaterCapacity(theater.get().getTheaterCapacity());</b>
+&nbsp;
+<b class="pc">&nbsp;                    if (null != theater.get().getBookedTickets() &amp;&amp; !theater.get().getBookedTickets().isEmpty()) {</b>
+<b class="fc">&nbsp;                        movieSearchResDTO.setBookedTickets(theater.get().getBookedTickets());</b>
+&nbsp;                    }
+<b class="fc">&nbsp;                    log.info(&quot; theater added to res list&quot;);</b>
+<b class="fc">&nbsp;                    movieSearchResDTOList.add(movieSearchResDTO);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        log.info(&quot;final movie res list size {}&quot;,movieSearchResDTOList.size());</b>
+<b class="fc">&nbsp;        return movieSearchResDTOList;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public ResponseEntity&lt;String&gt; deleteMovie(String movieId) {
+<b class="fc">&nbsp;        log.info(&quot;Inside deleteMovie Service Method :&quot;);</b>
+<b class="fc">&nbsp;        Optional&lt;Movie&gt; movieInLedger = movieRepo.findById(movieId);</b>
+<b class="pc">&nbsp;        if (movieInLedger.isPresent()) {</b>
+<b class="fc">&nbsp;            movieRepo.deleteById(movieId);</b>
+<b class="fc">&nbsp;            log.info(&quot;Movie Deleted Successfully for movieId :{}&quot;,movieId);</b>
+<b class="fc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;Movie Deleted Successfully&quot;, HttpStatus.OK);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            log.info(&quot;Movie not found for movieId :{}&quot;,movieId);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;Movie not found&quot;, HttpStatus.NOT_FOUND);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public ResponseEntity&lt;String&gt; bookTicket(BookTicketReqDTO bookTicketReqDTO, String userId) {
+<b class="fc">&nbsp;        log.info(&quot;Inside bookTicket Service Method :&quot;);</b>
+<b class="pc">&nbsp;        if (null != bookTicketReqDTO.getMovieId()) {</b>
+<b class="fc">&nbsp;            Optional&lt;Movie&gt; movieInLedger = movieRepo.findById(bookTicketReqDTO.getMovieId());</b>
+<b class="pc">&nbsp;            if (movieInLedger.isPresent()) {</b>
+&nbsp;
+<b class="pc">&nbsp;                if (movieInLedger.get().getReleaseDate().after(bookTicketReqDTO.getBookingDate())) {</b>
+<b class="nc">&nbsp;                    log.info(&quot;Movie is yet to be released!&quot;);</b>
+<b class="nc">&nbsp;                    return new ResponseEntity&lt;&gt;(&quot;Movie is yet to be released!&quot;, HttpStatus.BAD_REQUEST);</b>
+<b class="pc">&nbsp;                } else if (!movieInLedger.get().getTheaterIdList().contains(bookTicketReqDTO.getTheaterId())) {</b>
+<b class="nc">&nbsp;                    log.info(&quot;Movie is not released in this theater!&quot;);</b>
+<b class="nc">&nbsp;                    return new ResponseEntity&lt;&gt;(&quot;Movie is not released in this theater!!&quot;, HttpStatus.BAD_REQUEST);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="pc">&nbsp;        if (null != bookTicketReqDTO.getTheaterId()) {</b>
+<b class="fc">&nbsp;            Optional&lt;Theater&gt; theaterInLedger = theaterRepo.findById(bookTicketReqDTO.getTheaterId());</b>
+<b class="pc">&nbsp;            if (theaterInLedger.isPresent()) {</b>
+<b class="fc">&nbsp;                Set&lt;Integer&gt; bookedTickets = new HashSet&lt;&gt;();</b>
+<b class="pc">&nbsp;                if (null != theaterInLedger.get().getBookedTickets() &amp;&amp; !theaterInLedger.get().getBookedTickets().isEmpty()) {</b>
+<b class="fc">&nbsp;                    bookedTickets = theaterInLedger.get().getBookedTickets();</b>
+<b class="fc">&nbsp;                    Set&lt;Integer&gt; commonSeats = new HashSet&lt;&gt;(bookedTickets);</b>
+<b class="fc">&nbsp;                    commonSeats.retainAll(bookTicketReqDTO.getSeatNumber());</b>
+<b class="pc">&nbsp;                    if (!commonSeats.isEmpty()) {</b>
+<b class="nc">&nbsp;                        log.info(&quot;Seat is already booked&quot;);</b>
+<b class="nc">&nbsp;                        return new ResponseEntity&lt;&gt;(&quot;Seat is already booked&quot;, HttpStatus.BAD_REQUEST);</b>
+&nbsp;                    }
+&nbsp;                }
+<b class="fc">&nbsp;                for (Integer seat : bookTicketReqDTO.getSeatNumber()) {</b>
+<b class="pc">&nbsp;                    if (seat &gt; theaterInLedger.get().getTheaterCapacity()) {</b>
+<b class="nc">&nbsp;                        log.info(&quot;Seat number is invalid&quot;);</b>
+<b class="nc">&nbsp;                        return new ResponseEntity&lt;&gt;(&quot;Seat number is invalid&quot;, HttpStatus.BAD_REQUEST);</b>
+&nbsp;                    }
+&nbsp;                }
+<b class="fc">&nbsp;                bookedTickets.addAll(bookTicketReqDTO.getSeatNumber());</b>
+<b class="fc">&nbsp;                theaterInLedger.get().setBookedTickets(bookedTickets);</b>
+<b class="fc">&nbsp;                log.info(&quot;Seat booked for theater&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;                theaterRepo.save(theaterInLedger.get());</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        Ticket ticket = new Ticket();</b>
+<b class="fc">&nbsp;        ticket.setBookingDate(bookTicketReqDTO.getBookingDate());</b>
+<b class="fc">&nbsp;        ticket.setMovieId(bookTicketReqDTO.getMovieId());</b>
+<b class="fc">&nbsp;        ticket.setUserId(userId);</b>
+<b class="fc">&nbsp;        ticket.setTheaterId(bookTicketReqDTO.getTheaterId());</b>
+<b class="fc">&nbsp;        ticket.setSeatNumber(bookTicketReqDTO.getSeatNumber());</b>
+<b class="fc">&nbsp;        long totalTicket = ticketRepo.count();</b>
+<b class="pc">&nbsp;        if (totalTicket == 0) {</b>
+<b class="nc">&nbsp;            ticket.setTicketId(&quot;1&quot;);</b>
+&nbsp;
+&nbsp;        } else {
+<b class="fc">&nbsp;            ticket.setTicketId(String.valueOf((int) totalTicket + 1));</b>
+&nbsp;        }
+<b class="fc">&nbsp;        ticketRepo.save(ticket);</b>
+<b class="fc">&nbsp;        log.info(&quot;Ticket Booked Successfully.&quot;);</b>
+<b class="fc">&nbsp;        return new ResponseEntity&lt;&gt;(&quot;Ticket Booked Successfully..&quot;, HttpStatus.OK);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-08-23 02:58</div>
+</div>
+</body>
+</html>

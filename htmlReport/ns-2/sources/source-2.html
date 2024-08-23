@@ -1,0 +1,167 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > SpringConfig</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.cts.fse.config</a>
+</div>
+
+<h1>Coverage Summary for Class: SpringConfig (com.cts.fse.config)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SpringConfig</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.cts.fse.config;
+&nbsp;
+&nbsp;import com.cts.fse.service.UserDetailsServiceImpl;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.context.annotation.Bean;
+&nbsp;import org.springframework.context.annotation.Configuration;
+&nbsp;import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+&nbsp;import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.builders.WebSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+&nbsp;import org.springframework.security.config.http.SessionCreationPolicy;
+&nbsp;import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;
+&nbsp;@Configuration
+&nbsp;@EnableWebSecurity
+<b class="nc">&nbsp;public class SpringConfig extends WebSecurityConfigurerAdapter {</b>
+&nbsp;    @Autowired
+&nbsp;    UserDetailsServiceImpl userDetailsService;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    protected void configure(HttpSecurity http) throws Exception {
+&nbsp;//        http.authorizeRequests().antMatchers(
+&nbsp;//                &quot;/api/v1.0/moviebooking&quot;,
+&nbsp;//                &quot;/swagger-ui.html#&quot;,
+&nbsp;//                &quot;/register&quot;,
+&nbsp;//                &quot;/login&quot;,
+&nbsp;//                &quot;/user-controller&quot;).permitAll().anyRequest().authenticated().and().httpBasic();
+&nbsp;//        http.csrf().disable();
+&nbsp;//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable();
+<b class="nc">&nbsp;        http.csrf().disable().authorizeRequests()</b>
+<b class="nc">&nbsp;                .antMatchers(&quot;/**&quot;)</b>
+<b class="nc">&nbsp;                .permitAll()</b>
+<b class="nc">&nbsp;                .anyRequest()</b>
+<b class="nc">&nbsp;                .authenticated()</b>
+<b class="nc">&nbsp;                .and()</b>
+<b class="nc">&nbsp;                .exceptionHandling().and()</b>
+<b class="nc">&nbsp;                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);</b>
+&nbsp;    }
+&nbsp;    @Override
+&nbsp;    public void configure(WebSecurity web) throws Exception {
+<b class="nc">&nbsp;        web.ignoring().antMatchers(&quot;/v2/api-docs&quot;,</b>
+&nbsp;                &quot;/configuration/ui&quot;,
+&nbsp;                &quot;/swagger-resources/**&quot;,
+&nbsp;                &quot;/configuration/security&quot;,
+&nbsp;                &quot;/swagger-ui.html&quot;,
+&nbsp;                &quot;/register&quot;,
+&nbsp;                &quot;/login&quot;,
+&nbsp;                &quot;/user-controller&quot;,
+&nbsp;                &quot;/webjars/**&quot;);
+&nbsp;
+&nbsp;    }
+&nbsp;    @Override
+&nbsp;    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+<b class="nc">&nbsp;        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public PasswordEncoder passwordEncoder() {
+<b class="nc">&nbsp;        return new BCryptPasswordEncoder();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-08-23 02:58</div>
+</div>
+</body>
+</html>
