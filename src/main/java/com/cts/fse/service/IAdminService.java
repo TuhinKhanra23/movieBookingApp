@@ -5,4 +5,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface IAdminService {
     ResponseEntity<String> updateSeatStatus(Integer theaterId) throws MovieBookingException;
+
+    ResponseEntity<String> deleteTicket(String ticketId);
 }

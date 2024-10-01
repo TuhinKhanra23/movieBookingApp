@@ -11,9 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class ShowTicketResDto {
+    private String ticketId;
     private String name;
     private Date bookingDate;
-    private List<Integer> seatNumber;
+    private List<String> seatNumber;
     private String movieName;
     private String theaterName;
     private String theaterLoc;

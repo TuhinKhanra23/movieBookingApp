@@ -16,4 +16,6 @@ public interface IUserService {
     ResponseEntity<String> resetPassword(String loginId, String newPassword) throws MovieBookingException;
 
     List<ShowTicketResDto> showBookedTickets(String userId);
+
+    List<ShowTicketResDto> showAllTickets();
 }

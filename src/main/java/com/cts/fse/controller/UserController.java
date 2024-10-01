@@ -16,6 +16,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@CrossOrigin
 public class UserController {
 
     @Autowired
@@ -48,7 +49,7 @@ public class UserController {
 
     @ApiOperation(value = "Show Booked Tickets", response = ResponseEntity.class)
     @GetMapping("/showBookedTickets")
-    public List<ShowTicketResDto> showBookedTickets(@RequestHeader String token) throws MovieBookingException {
+    public List<ShowTicketResDto> showBookedTickets(@RequestParam(required = true) String token) throws MovieBookingException {
         log.info("Inside /showBookedTickets Api Controller ");
         if (jwtUtil.validateToken(token)) {
 
@@ -58,6 +59,15 @@ public class UserController {
         } else {
             throw new MovieBookingException("Invalid Token");
         }
+    }
+
+    @ApiOperation(value = "Show All Tickets", response = ResponseEntity.class)
+    @GetMapping("/showAllTickets")
+    public List<ShowTicketResDto> showAllTickets() throws MovieBookingException {
+        log.info("Inside /showAllTickets Api Controller ");
+
+        return userService.showAllTickets();
+
     }
 
 }

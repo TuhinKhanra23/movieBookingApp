@@ -5,7 +5,6 @@ import com.cts.fse.config.MongoConnectionConfig;
 import com.cts.fse.dto.ShowTicketResDto;
 import com.cts.fse.dto.UserRegisterDTO;
 import com.cts.fse.exception.MovieBookingException;
-import com.cts.fse.model.Movie;
 import com.cts.fse.model.Theater;
 import com.cts.fse.model.Ticket;
 import com.cts.fse.model.User;
@@ -102,6 +101,8 @@ public class UserService implements IUserService {
                 user.setEmail(userInLedger.get().getEmail());
                 user.setName(userInLedger.get().getName());
                 user.setContactNo(userInLedger.get().getContactNo());
+                user.setRole(userInLedger.get().getRole());
+                user.setUserActive(userInLedger.get().isUserActive());
                 user.setToken(generateToken);
                 log.info("Login Successful!.. for userId {}", loginId);
                 return new ResponseEntity<>(user, HttpStatus.OK);
@@ -149,22 +150,54 @@ public class UserService implements IUserService {
 
                 Optional<User> user = userRepo.findById(userId);
                 user.ifPresent(value -> showTicketResDto.setName(value.getName()));
-                Optional<Movie> movie = movieRepo.findById(ticket.getMovieId());
-                movie.ifPresent(value -> showTicketResDto.setMovieName(value.getMovieName()));
 
-                Optional<Theater> theater = theaterRepo.findById(ticket.getTheaterId());
-                if (theater.isPresent()) {
-                    showTicketResDto.setTheaterName(theater.get().getTheaterName());
-                    showTicketResDto.setTheaterLoc(theater.get().getTheaterLoc());
+                showTicketResDto.setMovieName(ticket.getMovieName());
+
+                List<Theater> theater = theaterRepo.findByTheaterName(ticket.getTheaterName());
+                if (!theater.isEmpty()) {
+                    showTicketResDto.setTheaterName(theater.get(0).getTheaterName());
+                    showTicketResDto.setTheaterLoc(theater.get(0).getTheaterLoc());
                 }
                 showTicketResDto.setBookingDate(ticket.getBookingDate());
                 showTicketResDto.setSeatNumber(ticket.getSeatNumber());
+                showTicketResDto.setTicketId(ticket.getTicketId());
                 log.info("Ticket Added to response with ticketId{}", ticket.getTicketId());
                 showTicketResDtoList.add(showTicketResDto);
             }
         }
         log.info("Returning Tickets List for no of Records:{}", showTicketResDtoList.size());
         return showTicketResDtoList;
+    }
+
+    @Override
+    public List<ShowTicketResDto> showAllTickets() {
+        {
+            log.info("Inside showBookedTickets Service");
+            List<Ticket> ticketList = ticketRepo.findAll();
+            List<ShowTicketResDto> showTicketResDtoList = new ArrayList<>();
+            for (Ticket ticket : ticketList) {
+                if (!ticketList.isEmpty()) {
+
+                    ShowTicketResDto showTicketResDto = new ShowTicketResDto();
+
+
+                    showTicketResDto.setMovieName(ticket.getMovieName());
+
+                    List<Theater> theater = theaterRepo.findByTheaterName(ticket.getTheaterName());
+                    if (!theater.isEmpty()) {
+                        showTicketResDto.setTheaterName(theater.get(0).getTheaterName());
+                        showTicketResDto.setTheaterLoc(theater.get(0).getTheaterLoc());
+                    }
+                    showTicketResDto.setBookingDate(ticket.getBookingDate());
+                    showTicketResDto.setSeatNumber(ticket.getSeatNumber());
+                    showTicketResDto.setTicketId(ticket.getTicketId());
+                    log.info("Ticket Added to response with ticketId{}", ticket.getTicketId());
+                    showTicketResDtoList.add(showTicketResDto);
+                }
+            }
+            log.info("Returning Tickets List for no of Records:{}", showTicketResDtoList.size());
+            return showTicketResDtoList;
+        }
     }
 
 

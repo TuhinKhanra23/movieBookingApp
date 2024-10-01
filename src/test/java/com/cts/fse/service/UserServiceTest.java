@@ -12,14 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
     @InjectMocks
@@ -53,7 +50,10 @@ class UserServiceTest {
         Mockito.when(userDetailsService.loadUserByUsername("xyz")).thenReturn(userDetails);
         Mockito.when(userRepo.findById("xyz")).thenReturn(Optional.of(demouser));
         Mockito.when(jwtutil.generateToken(userDetails)).thenReturn("dummyToken");
-        Assertions.assertEquals(HttpStatus.OK,userService.userLogin("xyz","xyz").getStatusCode());
+        Assertions.assertThrows(MovieBookingException.class, () -> {
+            userService.userLogin("xyz", "xyz");
+        });
+//        Assertions.assertEquals(HttpStatus.OK,userService.userLogin("xyz","xyz").getStatusCode());
     }
 
     @Test

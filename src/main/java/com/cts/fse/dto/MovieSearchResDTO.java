@@ -14,9 +14,10 @@ public class MovieSearchResDTO {
     private String movieId;
     private String movieName;
     private Date releaseDate;
+    private Integer theaterId;
     private String theaterName;
     private String theaterLoc;
     private Integer theaterCapacity;
-    private Set<Integer> bookedTickets;
+    private Set<String> bookedTickets;
 
 }

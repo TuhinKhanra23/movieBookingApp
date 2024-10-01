@@ -67,7 +67,7 @@ public class JwtUtil {
         SecretKey key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretkey));
         return Jwts.builder().setClaims(claims).setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15))  // token for 15 min
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 5))  // token for 5 min
                 .signWith(key).compact();
 
     }

@@ -18,10 +18,10 @@ public class Ticket {
     @Id
     private String ticketId;
     private String userId;
-    private String movieId;
-    private Integer theaterId;
+    private String movieName;
+    private String theaterName;
     private Date bookingDate;
-    private List<Integer> seatNumber;
+    private List<String> seatNumber;
 
 
 }

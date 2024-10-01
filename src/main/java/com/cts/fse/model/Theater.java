@@ -21,7 +21,7 @@ public class Theater {
     private String theaterLoc;
 
     private Integer theaterCapacity;
-    private Set<Integer> bookedTickets;
+    private Set<String> bookedTickets;
     private Integer availableSeats;
 
 

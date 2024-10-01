@@ -1,5 +1,6 @@
 package com.cts.fse.service;
 
+import com.cts.fse.dto.AddMovieReqDto;
 import com.cts.fse.dto.BookTicketReqDTO;
 import com.cts.fse.exception.MovieBookingException;
 import com.cts.fse.model.Movie;
@@ -83,12 +84,15 @@ class MovieServiceTest {
 
         Mockito.when(theaterRepo.findByTheaterNameAndTheaterLoc("t1","tloc1")).thenReturn(demoTheaterList);
 
-        Assertions.assertEquals(HttpStatus.CONFLICT, movieService.addTheater(theater).getStatusCode());
+        Assertions.assertThrows(MovieBookingException.class, () -> {
+            movieService.addTheater(theater);
+        });
+
     }
 
     @Test
     void addMovie() {
-        Movie movie = new Movie();
+        AddMovieReqDto movie = new AddMovieReqDto();
         Mockito.when(movieRepo.count()).thenReturn((long)0);
         movieService.addMovie(movie);
         Assertions.assertEquals(HttpStatus.OK, movieService.addMovie(movie).getStatusCode());
@@ -96,7 +100,7 @@ class MovieServiceTest {
 
     @Test
     void addMovie1() {
-        Movie movie = new Movie();
+        AddMovieReqDto movie = new AddMovieReqDto();
         Mockito.when(movieRepo.count()).thenReturn((long)1);
         movieService.addMovie(movie);
         Assertions.assertEquals(HttpStatus.OK, movieService.addMovie(movie).getStatusCode());

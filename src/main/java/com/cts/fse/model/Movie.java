@@ -18,7 +18,10 @@ public class Movie {
     @Id
     private String movieId;
     private String movieName;
-    private Date releaseDate;
-    private List<Integer> theaterIdList;
 
+    private List<Integer> theaterIdList;
+    private Date releaseDate;
+
+    public Movie(String movieName, String releaseDate, String theaterIdList, String imagePath) {
+    }
 }

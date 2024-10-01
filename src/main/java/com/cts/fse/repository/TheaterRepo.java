@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface TheaterRepo extends MongoRepository<Theater, Integer> {
     List<Theater> findByTheaterNameAndTheaterLoc(String theaterName, String theaterLoc);
+
+    List<Theater> findByTheaterName(String theaterName);
 }
